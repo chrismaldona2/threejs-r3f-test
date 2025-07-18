@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import World from "./components/World";
+import Environment from "./components/Environment";
 
 export default function Experience() {
   return (
@@ -10,9 +11,6 @@ export default function Experience() {
       camera={{ zoom: 60, position: [100, 100, 100], far: 200 }}
       shadows="soft"
     >
-      <color attach="background" args={["lightblue"]} />
-
-      <Perf position="top-left" />
       <OrbitControls
         maxZoom={125}
         minZoom={40}
@@ -21,7 +19,8 @@ export default function Experience() {
         maxAzimuthAngle={0.5 * Math.PI}
         makeDefault
       />
-
+      <Perf position="top-left" deepAnalyze />
+      <Environment />
       <World />
     </Canvas>
   );

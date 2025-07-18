@@ -30,7 +30,7 @@ export default function RandomTriangles({
   }, []);
 
   return (
-    <mesh receiveShadow castShadow {...props}>
+    <mesh {...props}>
       <bufferGeometry ref={geometry}>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>

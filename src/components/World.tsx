@@ -1,69 +1,30 @@
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import type { ThreeElements } from "@react-three/fiber";
-import {
-  DirectionalLight,
-  DirectionalLightHelper,
-  type Mesh,
-  type Object3D,
-} from "three";
-import {
-  AccumulativeShadows,
-  Html,
-  RandomizedLight,
-  useHelper,
-} from "@react-three/drei";
-import RandomTriangles from "./RandomTriangles";
+import { type Mesh } from "three";
+import { Html } from "@react-three/drei";
 import Floor from "./Floor";
 import Sphere from "./Sphere";
 import Box from "./Box";
-import { useControls } from "leva";
+import Peashooter from "./Peashooter";
+import Placeholder from "./Placeholder";
+import Text3D from "./Text3D";
+import RandomDonuts from "./RandomDonuts";
 
 export default function World(props: ThreeElements["group"]) {
   const [spanHidden, setSpanHidden] = useState(false);
   const box = useRef<Mesh>(null);
 
-  const dirLight = useRef<DirectionalLight>(null!);
-  const dirLightHelper = useHelper(dirLight, DirectionalLightHelper, 2);
-  const { showDirLightHelper } = useControls("Lights", {
-    showDirLightHelper: { value: false, label: "Directional Light Helper" },
-  });
-
-  useEffect(() => {
-    if (dirLightHelper.current)
-      dirLightHelper.current.visible = showDirLightHelper;
-  }, [dirLightHelper, showDirLightHelper]);
-
   return (
     <group {...props}>
-      <Floor position-y={-1} scale={20} />
+      <Floor position-y={-1} scale={20} receiveShadow />
 
-      {/* ↓ Covers the entire floor */}
-      <AccumulativeShadows
-        position={[0, -0.99, 0]}
-        scale={20}
-        color="#316d39"
-        opacity={0.8}
-        frames={Infinity}
-        temporal
-        blend={30}
-      >
-        <RandomizedLight
-          amount={8}
-          radius={1}
-          ambient={0.5}
-          intensity={3}
-          position={[-4, 7, 8]}
-          bias={0.001}
-        />
-      </AccumulativeShadows>
-
-      <Sphere>
+      <Sphere receiveShadow castShadow>
         <Html
           as="span"
           wrapperClass="text-nowrap text-neutral-800 origin-center"
           position={[0, 1.85, 0]}
           distanceFactor={0.04}
-          occlude={[box as React.RefObject<Object3D>]}
+          occlude
           onOcclude={setSpanHidden}
           style={{
             transition: "all 0.3s",
@@ -74,22 +35,43 @@ export default function World(props: ThreeElements["group"]) {
           A sphere 🤯
         </Html>
       </Sphere>
-      <Box ref={box} position={[-3, 0, 3]} />
-      <RandomTriangles amount={10} position={[0, 2, -6]} />
 
-      <ambientLight intensity={1.25} />
-      <directionalLight
-        ref={dirLight}
-        position={[-4, 7, 8]}
-        intensity={1}
-        castShadow
-        shadow-camera-far={25}
-        shadow-camera-left={-15}
-        shadow-camera-right={15}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
-        shadow-mapSize={[2048, 2048]}
-      />
+      <Box ref={box} position={[-3, 0, 3]} receiveShadow castShadow />
+
+      <Suspense
+        fallback={
+          <Placeholder
+            color="#4e860e"
+            scale={[2, 4, 2]}
+            position={[3, 1.05, -3]}
+            rotation-y={0.5}
+          />
+        }
+      >
+        <Peashooter
+          position={[3, -1.06, -3]}
+          scale={2.5}
+          rotation-y={0.5}
+          castShadow
+          receiveShadow
+        />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <Placeholder
+            color="royalblue"
+            scale={[7, 2, 1]}
+            position={[0, 0.1, -8]}
+          />
+        }
+      >
+        <Text3D color="royalblue" position={[0, 0, -8]}>
+          Three.js
+        </Text3D>
+      </Suspense>
+
+      <RandomDonuts />
     </group>
   );
 }

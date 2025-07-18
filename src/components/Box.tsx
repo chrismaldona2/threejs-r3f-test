@@ -16,7 +16,7 @@ export default function Box({ ref, pivotOptions, ...props }: BoxProps) {
       scale={1.25}
       {...pivotOptions}
     >
-      <mesh scale={2} castShadow receiveShadow ref={ref} {...props}>
+      <mesh scale={2} ref={ref} {...props}>
         <boxGeometry />
         <meshStandardMaterial color="yellow" />
       </mesh>
