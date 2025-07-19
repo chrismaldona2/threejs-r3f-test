@@ -3,6 +3,7 @@ import { OrbitControls } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import World from "./components/World";
 import Environment from "./components/Environment";
+import PostProcessing from "./components/PostProcessing";
 
 export default function Experience() {
   return (
@@ -20,6 +21,7 @@ export default function Experience() {
         makeDefault
       />
       <Perf position="top-left" deepAnalyze />
+      <PostProcessing />
       <Environment />
       <World />
     </Canvas>
