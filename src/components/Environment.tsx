@@ -1,8 +1,9 @@
-import { Sky } from "@react-three/drei";
+// import { Sky } from "@react-three/drei";
 import { useControls } from "leva";
 
 export default function Environment() {
-  const { sunPosition, inclination, azimuth, distance } = useControls("Sky", {
+  const { sunPosition, color } = useControls("Sky", {
+    color: { value: "lightblue", label: "Color" },
     sunPosition: { value: [-4, 9, 8], label: "Sun Position" },
     inclination: { value: 0, label: "Inclination", min: 0, max: 6 },
     azimuth: { value: 0.25, label: "Azimuth", min: 0, max: 2 },
@@ -11,12 +12,14 @@ export default function Environment() {
 
   return (
     <>
-      <Sky
+      {/* <Sky
         sunPosition={sunPosition}
         inclination={inclination}
         azimuth={azimuth}
         distance={distance}
-      />
+      /> */}
+
+      <color args={[color]} attach="background" />
       <directionalLight
         position={sunPosition}
         intensity={1}
